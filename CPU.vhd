@@ -9,7 +9,30 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.all;
-
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+entity REG is
+	port( i_DATAIN: IN STD_LOGIC_VECTOR(7 downto 0);
+		i_ADDRESS: IN STD_LOGIC_VECTOR(7 downto 0);
+		i_W_R : IN boolean;
+		o_DATAOUT : OUT STD_LOGIC_VECTOR(7 downto 0);
+		i_clock : IN boolean);
+	end entity;
+	architecture BEHAVE of REG is
+		type MEM is ARRAY (255 downto 0) OF STD_LOGIC_VECTOR(7 downto 0);
+		SIGNAL MEMORY : MEM;
+		SIGNAL ADDR : INTEGER range 0 to 255;
+		BEGIN
+			PROCESS(i_ADDRESS,i_DATAIN,i_W_R,i_clock)
+				BEGIN
+			ADDR<=conv_integer(i_ADDRESS);
+			o_DATAOUT <= MEMORY(ADDR);
+				if(i_W_R and i_clock)THEN
+					MEMORY(ADDR)<=i_DATAIN;
+				END IF;
+			END process;
+		END BEHAVE;
+		
+		
 package CPU is
 
 -- type <new_type> is
